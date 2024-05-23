@@ -7,6 +7,7 @@
     <groupId>ru.chaplyginma</groupId>
     <artifactId>http-logging-spring-boot-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <modules>
         <module>http-logging-autoconfigure</module>
