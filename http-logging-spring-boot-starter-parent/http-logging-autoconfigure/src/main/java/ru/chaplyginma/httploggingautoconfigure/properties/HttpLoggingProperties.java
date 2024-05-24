@@ -1,4 +1,4 @@
-package ru.chaplyginma.properties;
+package ru.chaplyginma.httploggingautoconfigure.properties;
 
 import lombok.AccessLevel;
 import lombok.Data;

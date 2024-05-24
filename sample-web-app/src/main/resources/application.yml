@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: sample-web-app
+http-logging:
+  enabled: true
