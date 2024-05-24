@@ -4,8 +4,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,14 +15,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 public class HttpLoggingFilter extends OncePerRequestFilter {
+    private final HttpLoggingProperties httpLoggingProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         long startTime = System.currentTimeMillis();
-        log.info("Starting HttpLoggingFilter");
+        if (httpLoggingProperties.getLogRequestBody()) {
+            log.info("Log request body");
+        }
         try {
             logRequest(request);
             filterChain.doFilter(request, response);
@@ -46,10 +52,8 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
     }
 
     private void logResponse(HttpServletResponse response, long startTime) {
-        // Calculate processing time
         long duration = System.currentTimeMillis() - startTime;
 
-        // Capture the response details
         int status = response.getStatus();
         String responseHeaders = getResponseHeaders(response).entrySet().stream()
                 .map(entry -> String.format("%s: %s", entry.getKey(), entry.getValue()))
@@ -65,17 +69,13 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
 
     private Map<String, String> getRequestHeaders(HttpServletRequest request) {
         Map<String, String> requestHeaders = new HashMap<>();
-        request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-            requestHeaders.put(headerName, request.getHeader(headerName));
-        });
+        request.getHeaderNames().asIterator().forEachRemaining(headerName -> requestHeaders.put(headerName, request.getHeader(headerName)));
         return requestHeaders;
     }
 
     private Map<String, String> getResponseHeaders(HttpServletResponse response) {
         Map<String, String> responseHeaders = new HashMap<>();
-        response.getHeaderNames().forEach(headerName -> {
-            responseHeaders.put(headerName, response.getHeader(headerName));
-        });
+        response.getHeaderNames().forEach(headerName -> responseHeaders.put(headerName, response.getHeader(headerName)));
         return responseHeaders;
     }
 }

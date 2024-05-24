@@ -3,3 +3,4 @@ spring:
     name: sample-web-app
 http-logging:
   enabled: true
+  log-request-body: true

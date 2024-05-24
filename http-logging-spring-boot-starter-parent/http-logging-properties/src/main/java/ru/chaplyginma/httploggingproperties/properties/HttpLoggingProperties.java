@@ -1,4 +1,4 @@
-package ru.chaplyginma.httploggingautoconfigure.properties;
+package ru.chaplyginma.httploggingproperties.properties;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -9,5 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "http-logging")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HttpLoggingProperties {
-    Boolean enabled;
+    Boolean enabled = true;
+    Boolean logRequestBody = true;
+    Boolean logResponseBody = true;
 }
