@@ -1,7 +1,6 @@
 package ru.chaplyginma.httplogging.reactiveweb.filter;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -11,7 +10,6 @@ import ru.chaplyginma.httplogging.reactiveweb.logger.ReactiveWebHttpLogger;
 import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 
 @RequiredArgsConstructor
-@Slf4j
 public class ReactiveWebHttpLoggingFilter implements WebFilter {
 
     private final HttpLoggingProperties httpLoggingProperties;
@@ -27,7 +25,6 @@ public class ReactiveWebHttpLoggingFilter implements WebFilter {
         httpLogger.logRequest(loggingExchangeDecorator);
 
         return chain.filter(loggingExchangeDecorator)
-                .doOnError(error -> log.error("Error during request processing", error))
-                .doOnSuccess((se) -> httpLogger.logResponse(loggingExchangeDecorator, httpLoggingProperties, startTime));
+                .doAfterTerminate(() -> httpLogger.logResponse(loggingExchangeDecorator, httpLoggingProperties, startTime));
     }
 }

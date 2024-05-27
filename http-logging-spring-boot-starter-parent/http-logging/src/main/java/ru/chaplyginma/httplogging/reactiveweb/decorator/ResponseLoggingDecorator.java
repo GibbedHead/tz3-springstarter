@@ -7,6 +7,7 @@ import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class ResponseLoggingDecorator extends ServerHttpResponseDecorator {
@@ -23,7 +24,9 @@ public class ResponseLoggingDecorator extends ServerHttpResponseDecorator {
     }
 
     private void capture(DataBuffer buffer) {
-        this.body.append(StandardCharsets.UTF_8.decode(buffer.asByteBuffer()));
+        ByteBuffer copyBuffer = ByteBuffer.allocate(buffer.readableByteCount());
+        buffer.toByteBuffer(copyBuffer);
+        this.body.append(StandardCharsets.UTF_8.decode(copyBuffer));
     }
 
     public String getFullBody() {

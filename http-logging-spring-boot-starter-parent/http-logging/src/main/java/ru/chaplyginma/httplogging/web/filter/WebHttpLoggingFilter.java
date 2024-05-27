@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -14,7 +13,6 @@ import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 
 import java.io.IOException;
 
-@Slf4j
 @RequiredArgsConstructor
 public class WebHttpLoggingFilter extends OncePerRequestFilter {
     private final HttpLoggingProperties httpLoggingProperties;

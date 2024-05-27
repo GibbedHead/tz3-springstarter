@@ -5,6 +5,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import reactor.core.publisher.Flux;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class RequestLoggingDecorator extends ServerHttpRequestDecorator {
@@ -20,7 +21,9 @@ public class RequestLoggingDecorator extends ServerHttpRequestDecorator {
     }
 
     private void capture(DataBuffer buffer) {
-        this.body.append(StandardCharsets.UTF_8.decode(buffer.asByteBuffer()));
+        ByteBuffer copyBuffer = ByteBuffer.allocate(buffer.readableByteCount());
+        buffer.toByteBuffer(copyBuffer);
+        this.body.append(StandardCharsets.UTF_8.decode(copyBuffer));
     }
 
     public String getFullBody() {
