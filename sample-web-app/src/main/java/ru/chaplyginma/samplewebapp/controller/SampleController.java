@@ -35,6 +35,7 @@ public class SampleController {
             @RequestBody Book book
     ) {
         int id = idGenerator.incrementAndGet();
+        book.setId(id);
         books.put(id, book);
         return book;
     }

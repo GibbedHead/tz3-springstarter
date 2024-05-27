@@ -4,3 +4,4 @@ spring:
 http-logging:
   enabled: true
   log-request-body: true
+  log-response-body: true
