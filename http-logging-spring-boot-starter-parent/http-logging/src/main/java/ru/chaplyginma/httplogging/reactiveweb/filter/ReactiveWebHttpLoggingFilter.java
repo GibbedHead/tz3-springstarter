@@ -7,7 +7,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 import ru.chaplyginma.httplogging.reactiveweb.decorator.LoggingExchangeDecorator;
-import ru.chaplyginma.httplogging.reactiveweb.logger.HttpLogger;
+import ru.chaplyginma.httplogging.reactiveweb.logger.ReactiveWebHttpLogger;
 import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 
 @RequiredArgsConstructor
@@ -15,7 +15,7 @@ import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 public class ReactiveWebHttpLoggingFilter implements WebFilter {
 
     private final HttpLoggingProperties httpLoggingProperties;
-    private final HttpLogger httpLogger;
+    private final ReactiveWebHttpLogger httpLogger;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
