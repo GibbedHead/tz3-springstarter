@@ -8,26 +8,25 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ResponseLoggingDecorator extends ServerHttpResponseDecorator {
+    private final StringBuilder body = new StringBuilder();
 
-    private final AtomicReference<String> responseBodyRef;
-
-    public ResponseLoggingDecorator(ServerHttpResponse delegate, AtomicReference<String> responseBodyRef) {
+    public ResponseLoggingDecorator(ServerHttpResponse delegate) {
         super(delegate);
-        this.responseBodyRef = responseBodyRef;
     }
 
     @Override
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-        Flux<DataBuffer> fluxBody = Flux.from(body);
-        return super.writeWith(fluxBody.map(dataBuffer -> {
-            byte[] content = new byte[dataBuffer.readableByteCount()];
-            dataBuffer.read(content);
-            String responseBody = new String(content, StandardCharsets.UTF_8);
-            responseBodyRef.set(responseBody);
-            return bufferFactory().wrap(content);
-        }));
+        Flux<DataBuffer> buffer = Flux.from(body);
+        return super.writeWith(buffer.doOnNext(this::capture));
+    }
+
+    private void capture(DataBuffer buffer) {
+        this.body.append(StandardCharsets.UTF_8.decode(buffer.asByteBuffer()));
+    }
+
+    public String getFullBody() {
+        return this.body.toString();
     }
 }

@@ -62,7 +62,7 @@ public class WebHttpLoggingFilter extends OncePerRequestFilter {
         String requestHeaders = getRequestHeaders(request);
 
         String logMessageTemplate = """
-                
+                                
                 Request:
                 \tMethod = {}
                 \tRequest URL = {}
@@ -94,7 +94,7 @@ public class WebHttpLoggingFilter extends OncePerRequestFilter {
         String responseHeaders = getResponseHeaders(response);
 
         String requestBodyLogMessage = String.format("""
-                        
+                                                
                         Request:
                         \tRequest body =
                         %s
@@ -111,7 +111,7 @@ public class WebHttpLoggingFilter extends OncePerRequestFilter {
 
         String logMessage = String.format(
                 """
-                        
+                                                
                         Response:
                         \tResponse Status = %s
                         \tResponse Headers =

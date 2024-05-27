@@ -1,35 +1,84 @@
 package ru.chaplyginma.httplogging.reactiveweb.logger;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.server.ServerWebExchange;
+import ru.chaplyginma.httplogging.reactiveweb.decorator.LoggingExchangeDecorator;
+import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class HttpLogger {
 
-    public void logRequest(ServerWebExchange exchange, AtomicReference<String> requestBodyRef) {
-        log.info("Request Method: {}", exchange.getRequest().getMethod());
-        log.info("Request URL: {}", exchange.getRequest().getURI());
-        exchange.getRequest().getHeaders().forEach((name, values) ->
-                values.forEach(value -> log.info("Request Header: {}: {}", name, value))
-        );
+    public void logRequest(LoggingExchangeDecorator exchange) {
+        String method = exchange.getRequest().getMethod().toString();
+        String requestUrl = exchange.getRequest().getURI().toString();
+        String requestHeaders = exchange.getRequest().getHeaders().entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream().map(value -> String.format("%s: %s", entry.getKey(), value)))
+                .collect(Collectors.joining("\n\t\t"));
+        String logMessageTemplate = """
+                                
+                Request:
+                \tMethod = {}
+                \tRequest URL = {}
+                \tRequest Headers =
+                \t\t{}
+                """;
 
-        if (requestBodyRef.get() != null && !requestBodyRef.get().isEmpty()) {
-            log.info("Request Body: {}", requestBodyRef.get());
-        }
+        log.info(
+                logMessageTemplate,
+                method,
+                requestUrl,
+                requestHeaders
+        );
     }
 
-    public void logResponse(ServerWebExchange exchange, AtomicReference<String> responseBodyRef, long startTime) {
-        long duration = System.currentTimeMillis() - startTime;
-        log.info("Response Status Code: {}", exchange.getResponse().getStatusCode());
-        exchange.getResponse().getHeaders().forEach((name, values) ->
-                values.forEach(value -> log.info("Response Header: {}: {}", name, value))
-        );
-        log.info("Response Duration: {} ms", duration);
+    public void logResponse(LoggingExchangeDecorator exchange, HttpLoggingProperties httpLoggingProperties, long startTime) {
+        String requestBody = exchange.getRequest().getFullBody();
 
-        if (responseBodyRef.get() != null && !responseBodyRef.get().isEmpty()) {
-            log.info("Response Body: {}", responseBodyRef.get());
-        }
+        long responseDuration = System.currentTimeMillis() - startTime;
+
+        String responseStatus = Objects.requireNonNull(exchange.getResponse().getStatusCode()).toString();
+
+        String responseHeaders = exchange.getResponse().getHeaders().entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream().map(value -> String.format("%s: %s", entry.getKey(), value)))
+                .collect(Collectors.joining("\n\t\t"));
+
+        String responseBody = exchange.getResponse().getFullBody();
+
+        String requestBodyLogMessage = String.format("""
+                                                
+                        Request:
+                        \tRequest body =
+                        %s
+                        """,
+                requestBody
+        );
+
+        String responseBodyLogMessage = String.format("""
+                        Response body =
+                        %s
+                        """,
+                responseBody
+        );
+
+        String logMessage = String.format(
+                """
+                                                
+                        Response:
+                        \tResponse Status = %s
+                        \tResponse Headers =
+                        \t\t%s
+                        \tRequest Duration = %dms
+                        """,
+                responseStatus,
+                responseHeaders,
+                responseDuration
+        );
+        logMessage = (httpLoggingProperties.getLogRequestBody() && !requestBody.isBlank() ? requestBodyLogMessage : "")
+                + logMessage
+                + (httpLoggingProperties.getLogResponseBody() && !responseBody.isBlank() ? responseBodyLogMessage : "");
+
+        log.info(logMessage);
     }
 }

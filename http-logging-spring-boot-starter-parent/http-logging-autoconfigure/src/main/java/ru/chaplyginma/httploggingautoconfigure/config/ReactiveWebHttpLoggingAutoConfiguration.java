@@ -1,6 +1,5 @@
 package ru.chaplyginma.httploggingautoconfigure.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,7 +14,6 @@ import ru.chaplyginma.httploggingproperties.properties.HttpLoggingProperties;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnProperty(prefix = "http-logging", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(HttpLoggingProperties.class)
-@Slf4j
 public class ReactiveWebHttpLoggingAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
@@ -28,7 +26,6 @@ public class ReactiveWebHttpLoggingAutoConfiguration {
             HttpLoggingProperties httpLoggingProperties,
             HttpLogger httpLogger
     ) {
-        log.info(" - ReactiveWebHttpLoggingAutoConfiguration reactiveWebHttpLoggingFilter");
         return new ReactiveWebHttpLoggingFilter(httpLoggingProperties, httpLogger);
     }
 }
