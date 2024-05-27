@@ -1,1 +1,2 @@
-ru.chaplyginma.httploggingautoconfigure.config.HttpLoggingAutoConfiguration
+ru.chaplyginma.httploggingautoconfigure.config.WebHttpLoggingAutoConfiguration
+ru.chaplyginma.httploggingautoconfigure.config.ReactiveWebHttpLoggingAutoConfiguration

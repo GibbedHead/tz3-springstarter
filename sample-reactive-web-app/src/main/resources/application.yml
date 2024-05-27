@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: sample-reactive-web-app
+http-logging:
+  enabled: true
+  log-request-body: true
+  log-response-body: true

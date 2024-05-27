@@ -1,4 +1,4 @@
-package ru.chaplyginma.httplogging.filter;
+package ru.chaplyginma.httplogging.web.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class HttpLoggingFilter extends OncePerRequestFilter {
+public class WebHttpLoggingFilter extends OncePerRequestFilter {
     private final HttpLoggingProperties httpLoggingProperties;
 
     private static ContentCachingRequestWrapper wrapRequest(HttpServletRequest request) {
