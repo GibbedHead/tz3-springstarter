@@ -1,0 +1,16 @@
+services:
+  web-app:
+    build:
+      context: ./
+      dockerfile: .docker/DockerfileWeb
+    container_name: web-app
+    ports:
+      - 8080:8080
+
+  reactive-web-app:
+    build:
+      context: ./
+      dockerfile: .docker/DockerfileReactiveWeb
+    container_name: reactive-web-app
+    ports:
+      - 8090:8090

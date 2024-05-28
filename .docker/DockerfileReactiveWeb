@@ -1,0 +1,9 @@
+FROM eclipse-temurin:17-jdk-alpine
+
+RUN addgroup -S app && adduser -S app -G app
+
+USER app
+
+COPY sample-reactive-web-app/target/*.jar app.jar
+
+ENTRYPOINT ["java","-jar","/app.jar"]

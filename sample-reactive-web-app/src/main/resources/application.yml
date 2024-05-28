@@ -5,3 +5,5 @@ http-logging:
   enabled: true
   log-request-body: true
   log-response-body: true
+server:
+  port: 8090
