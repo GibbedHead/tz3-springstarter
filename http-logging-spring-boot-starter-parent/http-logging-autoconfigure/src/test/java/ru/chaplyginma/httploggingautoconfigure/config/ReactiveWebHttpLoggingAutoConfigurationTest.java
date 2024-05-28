@@ -22,7 +22,6 @@ public class ReactiveWebHttpLoggingAutoConfigurationTest {
     @Test
     void whenEnabledPropertyIsTrue_thenBeansAreRegistered() {
         contextRunner.run(context -> {
-            String[] beanNames = context.getBeanDefinitionNames();
             assertThat(context).hasSingleBean(HttpLogger.class);
             assertThat(context).hasSingleBean(ReactiveWebHttpLogger.class);
             assertThat(context).hasSingleBean(ReactiveWebHttpLoggingFilter.class);
