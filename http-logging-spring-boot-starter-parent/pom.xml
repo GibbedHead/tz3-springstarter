@@ -14,6 +14,7 @@
         <module>http-logging</module>
         <module>http-logging-spring-boot-starter</module>
         <module>http-logging-properties</module>
+        <module>http-logging-tests</module>
     </modules>
 
     <properties>
